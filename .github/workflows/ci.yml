@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      APP_PASSWORD: ci-password
+      SESSION_SECRET: ci-session-secret-at-least-32-characters
+      BOT_TOKEN: ci-bot-token
+      SUPABASE_URL: https://msbgpefljkzrhfgagvac.supabase.co
+      SUPABASE_SERVICE_ROLE_KEY: ci-service-role-placeholder
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
